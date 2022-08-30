@@ -1,0 +1,30 @@
+version: "3.0"
+services:
+
+  mongodb:
+    container_name: k-contacts-mongodb
+    image: "mongo"
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - k-contacts-mongodb-volume:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  mongodb-express:
+    container_name: k-contacts-mongodb-express
+    image: "mongo-express"
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongodb
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@mongodb:27017/
+
+volumes:
+  k-contacts-mongodb-volume:

@@ -1,0 +1,26 @@
+server:
+  port: 9000
+
+spring:
+  data:
+    mongodb:
+      uri: "mongodb://root:root@localhost:27017/"
+      database: contacts
+  devtools:
+    restart:
+      poll-interval: "2s"
+      quiet-period: "1s"
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    info:
+      enabled: true
+    health:
+      enabled: true
