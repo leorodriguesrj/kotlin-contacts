@@ -3,7 +3,9 @@ package com.acme.contacts.application
 import com.acme.contacts.domain.*
 import java.util.*
 
-open class ContactOperationsImpl(private val contactRepository: ContactRepository) : ContactOperations {
+open class ContactOperationsImpl(
+    private val contactRepository: ContactRepository
+) : ContactOperations {
 
     override fun findAllContacts(): ContactList {
         return ContactList(contactRepository.findAll())

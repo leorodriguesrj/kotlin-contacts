@@ -219,13 +219,62 @@ internal class AddressOperationsTest {
         }
 
         @Test
-        fun `should report abort if the contact does not exist`() {
-            TODO("Hang on tight!")
+        fun `should report if the contact does not exist`() {
+            val repository = mock<ContactRepository>()
+            val contactOperations = mock<ContactOperations>()
+            val contactKey = DefaultContactKey()
+            val addressKey = DefaultAddressKey()
+
+            val operations = AddressOperations(contactOperations, repository)
+
+            whenever(contactOperations.findContactByKey(contactKey))
+                .thenReturn(Optional.empty())
+
+            val result = operations.removeEmailFromContactByKeys(contactKey, addressKey)
+
+            assertTrue(result.isEmpty)
+
+            verify(contactOperations, times(1))
+                .findContactByKey(contactKey)
         }
 
         @Test
         fun `should do nothing if there is no address with the given key`() {
-            TODO("Hang on tight!")
+            val repository = mock<ContactRepository>()
+            val contactOperations = mock<ContactOperations>()
+            val contactKey = DefaultContactKey()
+            val addressKey = DefaultAddressKey()
+
+            val theAddress = Address(
+                zip = Zip("24230200"),
+                number = 91,
+                complement = AddressComplement(
+                    type = Apartment, description = Description("105")
+                ),
+                label = Label("home"),
+            )
+
+            val addressList = AddressList.mutableAddressListOf(theAddress)
+
+            val contact = Contact(
+                key = contactKey,
+                addresses = addressList
+            )
+
+            val operations = AddressOperations(contactOperations, repository)
+
+            whenever(contactOperations.findContactByKey(contactKey))
+                .thenReturn(Optional.of(contact))
+
+            val result = operations.removeEmailFromContactByKeys(contactKey, addressKey)
+
+            assertTrue(result.isPresent)
+            assertEquals(addressKey, result.get())
+
+            verify(contactOperations, times(1))
+                .findContactByKey(contactKey)
+
+            assertEquals(AddressList.mutableAddressListOf(theAddress), addressList)
         }
     }
 
